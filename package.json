@@ -4,7 +4,7 @@
   "description": "Codex plugin and npm installer for Karpathy-inspired coding-agent guidelines.",
   "type": "module",
   "bin": {
-    "karpathy-guidelines": "./bin/karpathy-guidelines.mjs"
+    "karpathy-guidelines": "bin/karpathy-guidelines.mjs"
   },
   "scripts": {
     "doctor": "node bin/karpathy-guidelines.mjs doctor",
