@@ -1,6 +1,6 @@
 {
   "name": "@autumncry/andrej-karpathy-skills-codex",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Codex plugin and npm installer for Karpathy-inspired coding-agent guidelines.",
   "type": "module",
   "bin": {

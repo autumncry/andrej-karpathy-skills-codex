@@ -1,6 +1,6 @@
 {
   "name": "karpathy-guidelines",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Manual Codex skill for Karpathy-inspired coding guidelines: surface assumptions, keep changes simple, make surgical edits, and define verifiable success criteria.",
   "author": {
     "name": "autumncry"

@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { readFileSync } from "node:fs";
+import { cpSync, lstatSync, mkdirSync, readFileSync, rmSync } from "node:fs";
 import { spawnSync } from "node:child_process";
+import { homedir } from "node:os";
 
 const MARKETPLACE = "andrej-karpathy-skills-codex";
 const PLUGIN = "karpathy-guidelines";
@@ -13,6 +14,37 @@ const pluginManifestPath = resolve(
   packageRoot,
   "plugins/karpathy-guidelines/.codex-plugin/plugin.json"
 );
+
+function codexHome() {
+  return process.env.CODEX_HOME || resolve(homedir(), ".codex");
+}
+
+function marketplaceRoot() {
+  return resolve(codexHome(), "plugin-marketplaces", MARKETPLACE);
+}
+
+function ensureMarketplaceRoot() {
+  const root = marketplaceRoot();
+  mkdirSync(dirname(root), { recursive: true });
+  try {
+    lstatSync(root);
+    rmSync(root, { recursive: true, force: true });
+  } catch (error) {
+    if (error?.code !== "ENOENT") {
+      throw error;
+    }
+  }
+  cpSync(packageRoot, root, {
+    recursive: true,
+    filter: (source) => {
+      const relativeSource = source.slice(packageRoot.length);
+      return !relativeSource.startsWith("/.git")
+        && !relativeSource.endsWith(".tgz")
+        && !relativeSource.startsWith("/node_modules");
+    }
+  });
+  return root;
+}
 
 function printHelp() {
   console.log(`karpathy-guidelines
@@ -143,10 +175,12 @@ function removeInstalledPlugin(message, options = {}) {
 
 function setup() {
   requireCodex();
+  const root = marketplaceRoot();
 
   const existingRoot = getMarketplaceRoot({ allowBroken: true });
-  if (existingRoot === packageRoot) {
-    console.log(`Marketplace ${MARKETPLACE} is already registered at ${packageRoot}.`);
+  if (existingRoot === root) {
+    ensureMarketplaceRoot();
+    console.log(`Marketplace ${MARKETPLACE} is already registered at ${root}.`);
   } else {
     if (existingRoot === BROKEN_MARKETPLACE) {
       console.log(`Removing broken marketplace ${MARKETPLACE}.`);
@@ -156,7 +190,7 @@ function setup() {
       }
       printResult(removeMarketplace);
     } else if (existingRoot) {
-      console.log(`Updating marketplace ${MARKETPLACE} from ${existingRoot} to ${packageRoot}.`);
+      console.log(`Updating marketplace ${MARKETPLACE} from ${existingRoot} to ${root}.`);
       removeInstalledPlugin(`Removing existing plugin ${SELECTOR} before updating marketplace root.`, {
         force: true
       });
@@ -168,7 +202,7 @@ function setup() {
       printResult(removeMarketplace);
     }
 
-    const addMarketplace = run("codex", ["plugin", "marketplace", "add", packageRoot]);
+    const addMarketplace = run("codex", ["plugin", "marketplace", "add", ensureMarketplaceRoot()]);
     if (addMarketplace.status !== 0) {
       fail("Failed to register the Codex plugin marketplace.", addMarketplace);
     }
@@ -203,7 +237,7 @@ function doctor() {
   const codexVersion = requireCodex();
   const checks = [
     ["Codex CLI", Boolean(codexVersion), codexVersion],
-    ["Marketplace registered", getMarketplaceRoot() === packageRoot, MARKETPLACE],
+    ["Marketplace registered", getMarketplaceRoot() === marketplaceRoot(), MARKETPLACE],
     ["Plugin installed and enabled", hasInstalledPlugin(), SELECTOR],
     ["Manual invocation policy", checkManualInvocationPolicy(), "allow_implicit_invocation: false"]
   ];
