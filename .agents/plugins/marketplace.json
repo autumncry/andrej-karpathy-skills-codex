@@ -1,0 +1,20 @@
+{
+  "name": "andrej-karpathy-skills-codex",
+  "interface": {
+    "displayName": "Andrej Karpathy Skills for Codex"
+  },
+  "plugins": [
+    {
+      "name": "karpathy-guidelines",
+      "source": {
+        "source": "local",
+        "path": "./plugins/karpathy-guidelines"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}

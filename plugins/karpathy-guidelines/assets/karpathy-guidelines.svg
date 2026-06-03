@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="Karpathy Guidelines">
+  <rect width="512" height="512" rx="96" fill="#F97316"/>
+  <path d="M144 132h224v64H224v56h128v64H224v40h144v64H144z" fill="#fff"/>
+  <path d="M144 132h80v288h-80z" fill="#111827" opacity=".18"/>
+  <path d="M288 196l80-64v64z" fill="#FDBA74"/>
+  <path d="M288 356l80 64v-64z" fill="#FDBA74"/>
+</svg>

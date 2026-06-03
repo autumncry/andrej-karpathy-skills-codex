@@ -1,0 +1,43 @@
+{
+  "name": "andrej-karpathy-skills-codex",
+  "version": "0.1.0",
+  "description": "Codex plugin and npm installer for Karpathy-inspired coding-agent guidelines.",
+  "type": "module",
+  "bin": {
+    "karpathy-guidelines": "./bin/karpathy-guidelines.mjs"
+  },
+  "scripts": {
+    "doctor": "node bin/karpathy-guidelines.mjs doctor",
+    "setup": "node bin/karpathy-guidelines.mjs setup",
+    "pack:check": "npm pack --dry-run"
+  },
+  "files": [
+    ".agents/plugins/marketplace.json",
+    "plugins/",
+    "bin/",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "codex",
+    "openai",
+    "skills",
+    "agent",
+    "karpathy",
+    "coding-guidelines",
+    "plugin"
+  ],
+  "author": "autumncry",
+  "license": "MIT",
+  "homepage": "https://github.com/autumncry/andrej-karpathy-skills-codex#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/autumncry/andrej-karpathy-skills-codex.git"
+  },
+  "bugs": {
+    "url": "https://github.com/autumncry/andrej-karpathy-skills-codex/issues"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

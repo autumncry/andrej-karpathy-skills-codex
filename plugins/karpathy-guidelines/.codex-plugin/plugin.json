@@ -1,0 +1,39 @@
+{
+  "name": "karpathy-guidelines",
+  "version": "0.1.0",
+  "description": "Manual Codex skill for Karpathy-inspired coding guidelines: surface assumptions, keep changes simple, make surgical edits, and define verifiable success criteria.",
+  "author": {
+    "name": "autumncry"
+  },
+  "homepage": "https://github.com/autumncry/andrej-karpathy-skills-codex",
+  "repository": "https://github.com/autumncry/andrej-karpathy-skills-codex.git",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "karpathy",
+    "coding-guidelines",
+    "agent"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Karpathy Guidelines",
+    "shortDescription": "Manual guardrails for simple, scoped, verified coding work.",
+    "longDescription": "A manually-invoked Codex skill that applies Karpathy-inspired coding discipline: clarify assumptions, prefer simple implementation, make surgical changes, and verify against explicit success criteria.",
+    "developerName": "autumncry",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Use $karpathy-guidelines for this coding task.",
+      "Use $karpathy-guidelines while reviewing this diff."
+    ],
+    "websiteURL": "https://github.com/autumncry/andrej-karpathy-skills-codex",
+    "brandColor": "#F97316",
+    "composerIcon": "./assets/karpathy-guidelines-small.svg",
+    "logo": "./assets/karpathy-guidelines.svg",
+    "screenshots": []
+  }
+}
