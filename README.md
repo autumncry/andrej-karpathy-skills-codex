@@ -1,5 +1,7 @@
 # Andrej Karpathy Skills for Codex
 
+[English](README.md) | [简体中文](README.zh-CN.md)
+
 Codex plugin and npm installer for Karpathy-inspired coding-agent guidelines:
 think before coding, keep implementation simple, make surgical changes, and
 verify the goal before claiming success.
@@ -33,7 +35,7 @@ codex plugin add karpathy-guidelines@andrej-karpathy-skills-codex
 Select **Karpathy Guidelines** from the Codex plugin menu, or invoke it directly:
 
 ```text
-$karpathy-guidelines "review this diff with the Karpathy guardrails"
+$karpathy-guidelines "review this diff with the Karpathy guardrails and match my language"
 ```
 
 The skill is configured for manual use:
@@ -45,6 +47,10 @@ policy:
 
 That means it should not silently trigger just because a prompt mentions review,
 refactoring, or debugging.
+
+The skill also includes Chinese guidance. If the user's request is in Chinese,
+Codex should keep clarifications, plans, implementation notes, and final
+answers in Chinese unless the user asks for another language.
 
 ## What the skill asks Codex to do
 
