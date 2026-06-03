@@ -11,7 +11,7 @@ It is not an official Andrej Karpathy project.
 ## Install with npm
 
 ```bash
-npm install -g andrej-karpathy-skills-codex
+npm install -g @autumncry/andrej-karpathy-skills-codex
 karpathy-guidelines setup
 karpathy-guidelines doctor
 ```
