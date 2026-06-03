@@ -8,6 +8,11 @@ const MARKETPLACE = "andrej-karpathy-skills-codex";
 const PLUGIN = "karpathy-guidelines";
 const SELECTOR = `${PLUGIN}@${MARKETPLACE}`;
 const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+const BROKEN_MARKETPLACE = Symbol("broken marketplace");
+const pluginManifestPath = resolve(
+  packageRoot,
+  "plugins/karpathy-guidelines/.codex-plugin/plugin.json"
+);
 
 function printHelp() {
   console.log(`karpathy-guidelines
@@ -64,9 +69,12 @@ function requireCodex() {
   return version.stdout.trim() || version.stderr.trim();
 }
 
-function marketplaceList() {
+function marketplaceList(options = {}) {
   const result = run("codex", ["plugin", "marketplace", "list"]);
   if (result.status !== 0) {
+    if (options.allowBroken && result.stderr.includes(`\`${MARKETPLACE}\``)) {
+      return BROKEN_MARKETPLACE;
+    }
     fail("Could not read Codex plugin marketplaces.", result);
   }
   return result.stdout;
@@ -80,8 +88,17 @@ function pluginList() {
   return result.stdout;
 }
 
-function getMarketplaceRoot() {
-  const line = marketplaceList()
+function desiredPluginVersion() {
+  return JSON.parse(readFileSync(pluginManifestPath, "utf8")).version;
+}
+
+function getMarketplaceRoot(options = {}) {
+  const output = marketplaceList(options);
+  if (output === BROKEN_MARKETPLACE) {
+    return BROKEN_MARKETPLACE;
+  }
+
+  const line = output
     .split(/\r?\n/)
     .find((entry) => entry.trim().startsWith(`${MARKETPLACE} `));
 
@@ -92,30 +109,57 @@ function getMarketplaceRoot() {
   return line.trim().slice(MARKETPLACE.length).trim();
 }
 
-function hasInstalledPlugin() {
-  const line = pluginList()
+function installedPluginLine() {
+  return pluginList()
     .split(/\r?\n/)
     .find((entry) => entry.trim().startsWith(`${SELECTOR} `));
+}
 
+function isInstalledEnabled(line) {
   return Boolean(line?.includes("installed, enabled"));
+}
+
+function hasInstalledPlugin() {
+  const line = installedPluginLine();
+  return isInstalledEnabled(line) && line.includes(` ${desiredPluginVersion()} `);
+}
+
+function removeInstalledPlugin(message, options = {}) {
+  const line = installedPluginLine();
+  if (!isInstalledEnabled(line)) {
+    return;
+  }
+  if (!options.force && line.includes(` ${desiredPluginVersion()} `)) {
+    return;
+  }
+
+  console.log(message);
+  const removePlugin = run("codex", ["plugin", "remove", SELECTOR]);
+  if (removePlugin.status !== 0) {
+    fail("Failed to remove the existing Karpathy Guidelines plugin.", removePlugin);
+  }
+  printResult(removePlugin);
 }
 
 function setup() {
   requireCodex();
 
-  const existingRoot = getMarketplaceRoot();
+  const existingRoot = getMarketplaceRoot({ allowBroken: true });
   if (existingRoot === packageRoot) {
     console.log(`Marketplace ${MARKETPLACE} is already registered at ${packageRoot}.`);
   } else {
-    if (existingRoot) {
-      console.log(`Updating marketplace ${MARKETPLACE} from ${existingRoot} to ${packageRoot}.`);
-      if (hasInstalledPlugin()) {
-        const removePlugin = run("codex", ["plugin", "remove", SELECTOR]);
-        if (removePlugin.status !== 0) {
-          fail("Failed to remove the existing Karpathy Guidelines plugin before updating.", removePlugin);
-        }
-        printResult(removePlugin);
+    if (existingRoot === BROKEN_MARKETPLACE) {
+      console.log(`Removing broken marketplace ${MARKETPLACE}.`);
+      const removeMarketplace = run("codex", ["plugin", "marketplace", "remove", MARKETPLACE]);
+      if (removeMarketplace.status !== 0) {
+        fail("Failed to remove the broken marketplace before reinstalling.", removeMarketplace);
       }
+      printResult(removeMarketplace);
+    } else if (existingRoot) {
+      console.log(`Updating marketplace ${MARKETPLACE} from ${existingRoot} to ${packageRoot}.`);
+      removeInstalledPlugin(`Removing existing plugin ${SELECTOR} before updating marketplace root.`, {
+        force: true
+      });
 
       const removeMarketplace = run("codex", ["plugin", "marketplace", "remove", MARKETPLACE]);
       if (removeMarketplace.status !== 0) {
@@ -130,6 +174,8 @@ function setup() {
     }
     printResult(addMarketplace);
   }
+
+  removeInstalledPlugin(`Refreshing plugin ${SELECTOR} to version ${desiredPluginVersion()}.`);
 
   if (hasInstalledPlugin()) {
     console.log(`Plugin ${SELECTOR} is already installed and enabled.`);
