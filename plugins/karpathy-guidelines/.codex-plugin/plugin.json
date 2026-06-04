@@ -1,7 +1,7 @@
 {
   "name": "karpathy-guidelines",
-  "version": "0.1.4",
-  "description": "Manual Codex skill for Karpathy-inspired coding guidelines: match the user's language, surface assumptions, keep changes simple, make surgical edits, and define verifiable success criteria.",
+  "version": "0.1.5",
+  "description": "Opt-in Codex plugin skill for Karpathy-inspired coding guidelines: match the user's language, surface assumptions, keep changes simple, make surgical edits, and define verifiable success criteria.",
   "author": {
     "name": "autumncry"
   },
@@ -18,8 +18,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Karpathy Guidelines",
-    "shortDescription": "Manual guardrails for simple, scoped, verified coding work.",
-    "longDescription": "A manually-invoked Codex skill that applies Karpathy-inspired coding discipline: respond in the user's language, clarify assumptions, prefer simple implementation, make surgical changes, and verify against explicit success criteria.",
+    "shortDescription": "Opt-in guardrails for simple, scoped, verified coding work.",
+    "longDescription": "A manually-invoked Codex plugin skill that applies Karpathy-inspired coding discipline only when selected or invoked. It responds in the user's language, clarifies assumptions, prefers simple implementation, makes surgical changes, and verifies against explicit success criteria.",
     "developerName": "autumncry",
     "category": "Developer Tools",
     "capabilities": [

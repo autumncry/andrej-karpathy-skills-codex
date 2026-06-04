@@ -1,6 +1,6 @@
 interface:
   display_name: "Karpathy Guidelines"
-  short_description: "Manual guardrails for simple, surgical, verified coding work"
+  short_description: "Opt-in guardrails for simple, surgical, verified coding work"
   default_prompt: "Use $karpathy-guidelines for this task. Respond in my language, keep changes simple and scoped, and verify before claiming completion."
 policy:
   allow_implicit_invocation: false

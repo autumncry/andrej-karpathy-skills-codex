@@ -10,6 +10,23 @@ This is a Codex packaging project based on
 [`multica-ai/andrej-karpathy-skills`](https://github.com/multica-ai/andrej-karpathy-skills).
 It is not an official Andrej Karpathy project.
 
+## Why an opt-in Codex plugin
+
+This package is intentionally a Codex plugin, not a global instruction that
+Codex must execute for every task.
+
+- It runs only when you select **Karpathy Guidelines** from the plugin menu or
+  explicitly invoke `$karpathy-guidelines`.
+- It does not modify Codex's base behavior for unrelated conversations.
+- It avoids spending context tokens on Karpathy-style guardrails when the task
+  does not need them.
+- It keeps the workflow user-controlled: mount the plugin for careful coding,
+  review, refactoring, or debugging; leave it off for ordinary tasks.
+
+This is different from copying the guidance into `AGENTS.md` or Custom
+Instructions. Those approaches are persistent context. This plugin is an
+on-demand task guardrail.
+
 ## Install with npm
 
 ```bash
@@ -47,6 +64,10 @@ policy:
 
 That means it should not silently trigger just because a prompt mentions review,
 refactoring, or debugging.
+
+When mounted for a task, Codex loads the short `$karpathy-guidelines` skill and
+applies those instructions to that task. When the plugin is not selected or
+invoked, the skill is not part of Codex's task instructions.
 
 The loaded skill text is intentionally short and not duplicated in multiple
 languages. It tells Codex to respond in the user's language, so Chinese requests

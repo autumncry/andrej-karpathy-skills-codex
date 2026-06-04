@@ -6,6 +6,17 @@
 
 本项目基于 [`multica-ai/andrej-karpathy-skills`](https://github.com/multica-ai/andrej-karpathy-skills) 做 Codex 包装，不是 Andrej Karpathy 官方项目。
 
+## 为什么做成按需挂载的 Codex 插件
+
+这个包刻意做成 Codex 插件，而不是写进 Codex 底层、`AGENTS.md` 或 Custom Instructions 里让它每次都执行。
+
+- 只有当你在插件菜单里选择 **Karpathy Guidelines**，或显式调用 `$karpathy-guidelines` 时，它才会进入当前任务。
+- 不会改变 Codex 处理其他普通任务时的默认行为。
+- 不需要在每个任务里都消耗 Karpathy guardrails 的上下文 token。
+- 控制权在用户手里：需要谨慎写代码、review、重构或 debug 时再挂载；普通任务可以不启用。
+
+这和把规则复制到 `AGENTS.md` 或 Custom Instructions 不一样。后两者更像持久上下文；这个插件是按需启用的任务级约束。
+
 ## 通过 npm 安装
 
 ```bash
@@ -39,6 +50,8 @@ policy:
 ```
 
 也就是说，它不会因为提示词里出现 review、refactor、debugging 等词就自动触发。
+
+当你为某个任务挂载这个插件时，Codex 会加载短版 `$karpathy-guidelines` skill，并把这些规则应用到当前任务。没有选择或调用插件时，这份 skill 不会进入 Codex 的任务指令。
 
 ## 语言执行策略
 
