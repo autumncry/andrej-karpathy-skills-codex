@@ -48,9 +48,10 @@ policy:
 That means it should not silently trigger just because a prompt mentions review,
 refactoring, or debugging.
 
-The skill also includes Chinese guidance. If the user's request is in Chinese,
-Codex should keep clarifications, plans, implementation notes, and final
-answers in Chinese unless the user asks for another language.
+The loaded skill text is intentionally short and not duplicated in multiple
+languages. It tells Codex to respond in the user's language, so Chinese requests
+should still receive Chinese clarifications, plans, verification notes, and
+final answers unless the user asks otherwise.
 
 ## What the skill asks Codex to do
 
